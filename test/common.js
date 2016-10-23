@@ -4190,4 +4190,22 @@ describe('Gun', function(){
 			}, 100);
 		});
 	});
+
+describe('On', function(){
+	it('emits to former subscribers', function() {
+		var recv = null;
+		Gun.on('on-test-1').event(function(val) {
+			recv = val;
+		});
+		Gun.on('on-test-1').emit('foo');
+		expect(recv).to.be('foo');
+	});
+	it('does not emit to future subscribers', function() {
+		var recv = null;
+		Gun.on('on-test-1').emit('foo');
+		Gun.on('on-test-1').event(function(val) {
+			recv = val;
+		});
+		expect(recv).to.be(null);
+	});
 });
