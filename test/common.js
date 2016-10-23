@@ -4208,4 +4208,33 @@ describe('On', function(){
 		});
 		expect(recv).to.be(null);
 	});
+	it('on subscriptions can unsubscribe', function() {
+		var gun = Gun();
+		var recv;
+		gun.get('on-test-3').put({v: 'foo'});
+		var sub = gun.get('on-test-3').on(function(o) {
+			recv = o.v;
+		});
+		expect(recv).to.be('foo');
+		gun.get('on-test-3').put({v: 'bar'});
+		expect(recv).to.be('bar');
+		sub.off();
+		gun.get('on-test-3').put({v: 'off'});
+		expect(recv).to.be('bar');
+	});
+	it('map subscriptions can unsubscribe', function() {
+		var gun = Gun();
+		var recv;
+		gun.get('on-test-4').put({v: 'foo'});
+		var sub = gun.get('on-test-4').map(function(v, k) {
+			if (v == 'off') throw new Error('unexpected');
+			recv = v;
+		});
+		expect(recv).to.be('foo');
+		gun.get('on-test-4').put({v: 'bar'});
+		expect(recv).to.be('bar');
+		sub.off();
+		gun.get('on-test-4').put({v: 'off'});
+		expect(recv).to.be('bar');
+	});
 });
