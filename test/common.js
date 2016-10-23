@@ -4190,7 +4190,7 @@ describe('Gun', function(){
 			}, 100);
 		});
 	});
-
+});
 describe('On', function(){
 	it('emits to former subscribers', function() {
 		var recv = null;
